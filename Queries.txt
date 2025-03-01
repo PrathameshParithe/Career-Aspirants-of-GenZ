@@ -1,0 +1,221 @@
+-- 1. Gender distribution of respondents from India
+SELECT 
+    gender, COUNT(gender)
+FROM
+    updatednew
+WHERE
+    Country = 'India'
+GROUP BY gender;
+
+-- 2. What percentage of respondents from India are interested in education abroad and sponsorship?
+SELECT 
+    concat(round((SELECT 
+            COUNT(Education_outside_India)
+        FROM
+            updatednew
+        WHERE
+            Education_outside_India = 'Need Sponsor' 
+        GROUP BY Education_outside_India) * 100 / (SELECT 
+            COUNT(education_outside_india) count_of_education_outside_india
+        FROM
+            updatednew),2),"%") AS Need_sponsor_for_education_abroad,(SELECT 
+    concat(round((SELECT 
+            COUNT(Education_outside_India)
+        FROM
+            updatednew
+        WHERE
+            Education_outside_India = 'Yes' 
+        GROUP BY Education_outside_India) * 100 / (SELECT 
+            COUNT(education_outside_india) count_of_education_outside_india
+        FROM
+            updatednew),2),"%") AS Willing_for_education_abroad) as willing_to_education_outside_india;
+ 
+ -- 3.Top 6 career aspiration influences in India
+SELECT 
+    career_influencer,
+    COUNT(career_influencer) count_influencers
+FROM
+    updatednew
+GROUP BY career_influencer
+ORDER BY count_influencers DESC
+LIMIT 6;
+
+-- 4. Career aspiration influences by gender in India
+SELECT 
+    career_influencer, gender, COUNT(gender) AS gender_count
+FROM
+    updatednew
+GROUP BY career_influencer , gender;
+
+-- 5. What percentage of respondents are willing to work for a company for at least 3 years?
+SELECT 
+    (SELECT 
+            CONCAT(ROUND((SELECT 
+				COUNT(3_year)
+			        FROM
+				    updatednew
+				WHERE
+				    3_year = 'Yes, If company culture is good') * 100 / (SELECT 
+				COUNT(3_year)
+			        FROM updatednew),2),'%')) AS if_culture_is_good,
+    (SELECT 
+            CONCAT(ROUND((SELECT 
+				COUNT(3_year)
+				FROM
+				    updatednew
+				WHERE
+				    3_year = 'Yes') * 100 / (SELECT 
+				COUNT(3_year)
+				FROM updatednew),2),'%')) Yes_will_work;
+
+-- 6.Count of respondents preferring socially impactful companies
+SELECT 
+    Company_rating,
+    COUNT(Company_rating) AS willing_socially_impact_companies
+FROM
+    updatednew
+WHERE
+    Company_rating < 5
+GROUP BY Company_rating;
+
+-- 7. How does the preference for socially impactful companies vary by gender?
+SELECT 
+    gender,Company_rating,
+    COUNT(Company_rating) AS willing_socially_impact_companies
+FROM
+    updatednew
+WHERE
+    Company_rating < 5
+GROUP BY Company_rating,gender;
+
+-- 8. What is the distribution of minimum expected salary in the first three years among respondents?	
+SELECT 
+    3_years, COUNT(3_years) AS count_of_respondent
+FROM
+    updatednew
+GROUP BY 3_years
+ORDER BY count_of_respondent DESC;
+
+-- 9. What is the expected minimum monthly salary in hand?	
+SELECT 
+    in_hand_salary,
+    COUNT(in_hand_salary) AS count_of_in_hand_salary
+FROM
+    updatednew
+WHERE
+    in_hand_salary NOT LIKE 'N/A'
+GROUP BY in_hand_salary
+ORDER BY count_of_in_hand_salary DESC;
+
+-- 10. What percentage of respondents prefer remote working?
+
+SELECT 
+    CONCAT(ROUND((SELECT 
+                            COUNT(no_remote_working)
+                        FROM
+                            updatednew
+                        WHERE
+                            no_remote_working NOT LIKE 0
+                                AND no_remote_working < 6) * 100 / (SELECT 
+                            COUNT(no_remote_working)
+                        FROM
+                            updatednew),
+                    2),
+            '%') AS remote_working_percentage;
+
+-- 11. What is the preferred number of daily work hours?
+SELECT 
+    working_hours, COUNT(working_hours) AS count_of_work_hours
+FROM
+    updatednew
+WHERE
+    working_hours NOT LIKE 'N/A'
+GROUP BY working_hours
+ORDER BY count_of_work_hours DESC;
+
+-- 12. What are the common work frustrations among respondents?
+SELECT 
+    frustrate_you_at_work_,
+    COUNT(frustrate_you_at_work_) AS count_frustrate_you_at_work_
+FROM
+    updatednew
+WHERE
+    frustrate_you_at_work_ NOT LIKE 'N/A'
+GROUP BY frustrate_you_at_work_
+ORDER BY count_frustrate_you_at_work_ DESC;
+
+-- 13. How does the need for work-life balance interventions vary by gender?
+
+SELECT 
+    break, gender, COUNT(break) AS count_of_break
+FROM
+    updatednew
+WHERE
+    break NOT LIKE 'N/A' 
+GROUP BY gender , break;
+
+-- 14. How many respondents are willing to work under an abusive manager?
+SELECT 
+    aggressive_manager,
+    COUNT(aggressive_manager) AS count_of_aggressive_manager
+FROM
+    updatednew
+WHERE
+    aggressive_manager NOT LIKE 'N/A'
+GROUP BY aggressive_manager;
+
+-- 15. What is the distribution of minimum expected salary after five years?
+SELECT 
+    5_years, COUNT(5_years) AS count_5_years_salary
+FROM
+    updatednew
+GROUP BY 5_years
+ORDER BY count_5_years_salary DESC;
+
+-- 16. What are the remote working preferences by gender?
+SELECT 
+    no_remote_working,
+    gender,
+    COUNT(no_remote_working) AS count_of_remote_working
+FROM
+    updatednew
+WHERE
+    no_remote_working < 6
+GROUP BY no_remote_working , gender;
+
+-- 17. What are the top work frustrations for each gender?
+SELECT 
+    frustrate_you_at_work_,
+    gender,
+    COUNT(frustrate_you_at_work_)
+FROM
+    updatednew
+WHERE
+    frustrate_you_at_work_ NOT LIKE 'N/A'
+GROUP BY frustrate_you_at_work_ , gender;
+
+-- 18. What factors boost work happiness and productivity for respondents?
+SELECT 
+    happier_and_productive_at_work,
+    COUNT(happier_and_productive_at_work) AS count_of_happier_and_productive_at_work
+FROM
+    updatednew
+WHERE
+    happier_and_productive_at_work NOT LIKE 'N/A'
+GROUP BY happier_and_productive_at_work;
+
+-- 19. What percentage of respondents need sponsorship for education abroad?
+SELECT 
+    concat(round((SELECT 
+            COUNT(Education_outside_India)
+        FROM
+            updatednew
+        WHERE
+            Education_outside_India = 'Need Sponsor'
+        GROUP BY Education_outside_India) * 100 / (SELECT 
+            COUNT(education_outside_india) count_of_education_outside_india
+        FROM
+            updatednew),2),"%") AS Need_sponsor_for_education_abroad;
+
+
+
